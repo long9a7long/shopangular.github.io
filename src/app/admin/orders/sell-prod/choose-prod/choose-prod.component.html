@@ -1,0 +1,34 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">
+    <strong>Chọn sản phẩm</strong>
+  </h4>
+</div>
+<div class="modal-body">
+    <div class="row form-inline text-center margin-bottom-20">
+      <div class="form-group mb-4">
+          <input type="text" name="searchProdKey" [(ngModel)]="searchProdKey"  class="form-control" (ngModelChange)="filterProd($event)">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="col-lg-4" *ngFor="let item of listProd" >
+          <div [ngClass]="{'card':true, 'text-center':true,'is-selected': currentProd.id ==item.id} " (click) = "changeCurrentProd(item)">
+            <img src="{{item.anhsp}}" class="card-img-top" alt="{{item.tensp}}" width="100%" height="100px">
+            <div class="card-body">
+              <h5 class="card-title"><strong>{{item.tensp}}</strong></h5>
+              <p class="card-text red">{{item.giaban | currency: "VND"}}</p>
+              <button class="btn btn-success" (click) = "submitAddProd(item.masp)">Thêm</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-lg-3 shadow-left">
+        <h4>Chi tiết sản phẩm</h4>
+        <p>Tên: {{currentProd.tensp}}</p>
+        <p>Số lượng tồn kho: {{currentProd.soluong}}</p>
+        <p>Giá bán: {{currentProd.giaban}}</p>
+        <p>Danh mục: <span *ngFor="let cate of currentProd.chitietdanhmuc">{{cate.danhmucsp.tendanhmuc}}, </span></p>
+      </div>
+    </div>
+</div>

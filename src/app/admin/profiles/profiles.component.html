@@ -1,0 +1,91 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Thông tin nhân viên
+    </h1>
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <div class="box">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9 align-center">
+                <form [formGroup]="profileForm" (ngSubmit)="updateUser()">
+                    <div class="form-group">
+                      <label for="manv">Mã Nhân viên</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="manhanvien"
+                      />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" formControlName="password" />
+                      </div>
+                    <div class="form-group">
+                      <label for="tennv">Tên</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="ten"
+
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="sdt">Số điện thoại</label>
+                      <input type="text" class="form-control" formControlName="sdt" />
+                    </div>
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" formControlName="email" />
+                    </div>
+                    <div class="form-group">
+                      <label for="diachi">Địa chỉ</label>
+                      <input type="text" class="form-control" formControlName="diachi"/>
+                    </div>
+                    <div class="form-group">
+                      <label for="ngaysinh">Ngày sinh</label>
+                      <input bsDatepicker
+                      class="form-control"
+                      placement="top" formControlName="ngaysinh" />
+                    </div>
+                    <div class="form-group">
+                      <label>Giới tính</label>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          formControlName="gioitinh"
+                          [value]="1"
+
+                        />
+                        <label class="form-check-label">
+                          Nam
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          formControlName="gioitinh"
+                          [value]="0"
+
+                        />
+                        <label class="form-check-label">
+                          Nữ
+                        </label>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+    </div>
+  </section>
+
+</div>

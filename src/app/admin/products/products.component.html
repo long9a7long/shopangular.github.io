@@ -1,0 +1,187 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Danh sách sản phẩm
+      <span class="pull-right">
+        <a class="btn btn-block btn-primary" (click)="openModal(templateAddProd)">
+          <i class="fa fa-edit"></i> Thêm mới
+        </a>
+      </span>
+    </h1>
+  </section>
+  <!-- Main content -->
+  <section class="content">
+    <ng-template #templateAddProd>
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">
+          <strong>Tạo mới sản phẩm</strong>
+        </h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRefAddProd.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!--Form Add SP-->
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="masp">Mã sản phẩm</label>
+            <input type="text" class="form-control" id="masp" placeholder="Mã tự sinh nếu bỏ trống" />
+          </div>
+          <div class="form-group">
+            <label for="tensp">Tên sản phẩm</label>
+            <input type="text" class="form-control" id="tensp" placeholder="Nhập tên SP (bắt buộc)" />
+          </div>
+          <div class="form-group">
+            <label for="sdtkh">Số lượng</label>
+            <input type="number" class="form-control" name="soluong" />
+          </div>
+          <div class="form-group form-inline">
+            <label for="giavon">Giá vốn</label>
+            <input type="number" class="form-control" name="giavon" />
+            <label for="giaban">Giá bán</label>
+            <input type="number" class="form-control" name="giaban" />
+          </div>
+          <div class="form-group">
+            <label for="danhmuc">Danh mục</label>
+            <input type="text" class="form-control" id="danhmuc" />
+          </div>
+          <div class="form-group">
+            <label for="nhasx">Nhà sản xuất</label>
+            <ng-template ngFor let-item [ngForOf]="listProds" let-i="index">
+            <select name="nhasx" class="form-control">
+              <option value="0">{{item.nhasanxuat.tennsx}}</option>
+              <option value="1">Samsung</option>
+            </select>
+          </ng-template>
+          </div>
+          <div class="form-group">
+            <label for="motasp">Mô tả sản phẩm</label>
+            <textarea type="text" class="form-control" id="motasp">
+                    </textarea>
+          </div>
+          <div class="form-group">
+            <label for="anhsp">Ảnh sản phẩm</label>
+            <input type="text" class="form-control" id="anhsp" />
+          </div>
+          <div class="form-group">
+            <label>Gắn nhãn</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="ishot" value="1">
+              <label class="form-check-label" for="ishot">
+                is Hot
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="isnew" value="1">
+              <label class="form-check-label" for="isnew">
+                is New
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="displaywebsite" value="1">
+              <label class="form-check-label" for="displaywebsite">
+                Hiển thị trên website
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+          </div>
+
+        </form>
+      </div>
+      <!--End form add KH-->
+    </ng-template>
+    <div class="box">
+      <div class="box-header">
+        <div class="form-group col-md-5 padd-0">
+          <input class="form-control" id="product-search" name="searchTerm" [(ngModel)]="searchTerm" type="text" placeholder="Nhập mã sản phẩm hoặc tên sản phẩm">
+        </div>
+        <div class="form-group col-md-7 ">
+          <div class="col-md-3 padd-0" style="margin-right: 10px;">
+            <select class="form-control" [(ngModel)]="filterStatus" (change)="filter()"
+            name="filterStatus">
+              <option value="0">Trạng thái</option>
+              <option value="1">Đang kinh doanh</option>
+              <option value="2">Đã ngừng kinh doanh</option>
+            </select>
+          </div>
+          <div class="col-md-3 padd-0" style="margin-right: 10px;">
+          <select class="form-control" [(ngModel)]="fitlerdanhmucsp" name="fitlerdanhmucsp">
+              <option selected="selected" value="-1">--Danh mục--</option>
+              <option ></option>
+            </select>
+          </div>
+          <div class="col-md-3 padd-0" style="margin-right: 10px;">
+            <select class="form-control search-option-3" id="prd_manufacture_id">
+              <option selected="selected" value="-1">--Nhà sản xuất--</option>
+              <optgroup label="Chọn nhà sản xuất">
+                <option value="8">test</option>
+                <option value="9">apple</option>
+                <option value="10">cenlia</option>
+                <option value="11">Tommy</option>
+              </optgroup>
+              <optgroup label="------------------------">
+                <option value="product_manufacture" data-toggle="modal" data-target="#list-prd-manufacture">Tạo mới
+                  Nhà sản xuất
+                </option>
+              </optgroup>
+            </select>
+          </div>
+          <button class="btn btn-primary btn-large btn-ssup" (click)="search()"><i class="fa fa-search"></i> Tìm kiếm
+          </button>
+        </div>
+      </div>
+      <div class="box-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Tên sản phẩm</th>
+              <th scope="col">Mã sản phẩm</th>
+              <th scope="col">SL</th>
+              <th scope="col">Giá bán</th>
+              <th scope="col">Danh mục</th>
+              <th scope="col">Nhà sản xuất</th>
+              <th scope="col">Công cụ</th>
+            </tr>
+          </thead>
+          <tbody>
+              <ng-template ngFor let-item [ngForOf]="listProds" let-i="index">
+                <tr>
+                  <td scope="row">{{item.tensp}}</td>
+                  <th scope="row" (click) = "toggleChiTietSanPham(i)"
+                  >{{item.masp}}</th>
+                  <td scope="row">{{item.soluong}}</td>
+                  <td scope="row">{{item.giaban | currency: "VND"}}</td>
+                  <td scope="row"><span *ngFor="let danhmuc of item.chitietdanhmuc; let i=index">{{danhmuc.danhmucsp.tendanhmuc}}<span *ngIf="i!=item.chitietdanhmuc.length-1">, </span>  </span></td>
+                  <td scope="row">{{item.nhasanxuat.tennsx}}</td>
+                  <td style="text-align: center;">
+                      <i title="Sửa" class="fa fa-pencil-square-o" style="margin-right: 5px;"
+                        (click)="editProduct(item.id)"></i>
+                      <i class="fa fa-trash-o" style="color: darkred;" title="Xóa" (click)="deleteProduct(item.id)"></i>
+                  </td>
+                </tr>
+              </ng-template>
+          </tbody>
+        </table>
+      </div>
+      <div class="box-footer">
+        <div class="d-flex justify-content-between p-2"></div>
+        <div class="alert alert-info summany-info clearfix" role="alert">
+          <div class="sm-info pull-left">
+            SL sản phẩm/SL nhà sản xuất: 3/2
+          </div>
+          <div class="pull-right">
+            <pagination previousText="&lsaquo;" name="currentPage" nextText="&rsaquo;" firstText="&laquo;"
+              lastText="&raquo;" [boundaryLinks]="true" [totalItems]="pagination.totalItems"
+              [itemsPerPage]="pagination.itemsPerPage" [(ngModel)]="pagination.currentPage"
+              (pageChanged)="pageChanged($event)">
+            </pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div>

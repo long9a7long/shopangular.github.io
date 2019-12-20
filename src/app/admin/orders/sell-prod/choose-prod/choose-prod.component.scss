@@ -1,0 +1,19 @@
+.card {
+    -webkit-box-shadow: 10px 11px 13px 2px rgba(0,0,0,0.77);
+    -moz-box-shadow: 10px 11px 13px 2px rgba(0,0,0,0.77);
+    box-shadow: 10px 11px 13px 2px rgba(0,0,0,0.77);
+    padding: 5px;
+    border-radius: 10px;
+}
+.is-selected {
+  border: 1px solid blue;
+}
+.red {
+  color: red;
+}
+.shadow-left {
+  border-left: 1px solid #c2c0c2;
+}
+.margin-bottom-20 {
+  margin-bottom: 20px;
+}

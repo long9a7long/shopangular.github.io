@@ -1,0 +1,400 @@
+<div class="content-wrapper">
+    <section class="content-header">
+      <div class="row">
+        <div class="orders-act">
+          <div class="col-md-4 col-md-offset-2">
+            <div class="left-action text-left clearfix">
+              <h2>Đơn hàng »</h2>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="right-action text-right">
+              <div class="btn-groups">
+                <button
+                *ngIf="hoadonbanhang.trangthai!=3 && hoadonbanhang.trangthai!=5"
+                class="btn btn-success"
+                (click)="completeBill()"><i class="fa fa-check"></i> Hoàn thành
+                </button>
+                <button
+                *ngIf="hoadonbanhang.trangthai!=2 && hoadonbanhang.trangthai!=5 && hoadonbanhang.trangthai!=3"
+                class="btn btn-info" (click)="deliveringBill()"><i class="fa fa-truck"></i> Đang giao
+                </button>
+                <button
+                *ngIf="hoadonbanhang.trangthai!=4 && hoadonbanhang.trangthai!=5 && hoadonbanhang.trangthai!=3"
+                class="btn btn-warning" (click)="onHoldBill()"><i class="fa fa-pause"></i> Tạm dừng
+                </button>
+                <button
+                *ngIf="hoadonbanhang.trangthai!=5"
+                class="btn btn-danger" (click)="cancleBill()"><i class="fa fa-ban"></i> Hủy
+                </button>
+                <button
+                *ngIf="hoadonbanhang.trangthai!=3 && hoadonbanhang.trangthai!=5"
+                class="btn btn-primary" (click)="checkoutBill()"><i class="fa fa-save"></i> Lưu
+                </button>
+                <a routerLink="../../orders">
+                  <button class="btn-back btn btn-default" type="button"><i class="fa fa-arrow-left"></i> Thoát
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Main content -->
+    <section class="content">
+      <ng-template #template>
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">
+            <strong>Tạo mới khách hàng</strong>
+          </h4>
+          <button
+            type="button"
+            class="close pull-right"
+            aria-label="Close"
+            (click)="modalRef.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--Form Add KH-->
+        <div class="modal-body">
+          <form [formGroup]="addCustomersForm" (ngSubmit)="addCustomer()">
+            <!-- <div class="form-group">
+              <label for="makh">Mã KH</label>
+              <input
+                type="text"
+                class="form-control"
+                id="makhachhang"
+                formControlName="makhachhang"
+                placeholder="Nhập mã khách hàng (bắt buộc)"
+              />
+            </div> -->
+            <div class="form-group">
+              <label for="tenkh">Tên KH</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ten"
+                formControlName="ten"
+                placeholder="Nhập tên khách hàng (bắt buộc)"
+              />
+            </div>
+            <div class="form-group">
+                <label for="sdtkh">Số điện thoại</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="sdt"
+                  formControlName="sdt"
+                  placeholder="Nhập số điện thoại (bắt buộc)"
+                />
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  formControlName="email"
+                />
+            </div>
+            <div class="form-group">
+                <label for="diachikh">Địa chỉ</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="diachi"
+                  formControlName="diachi"
+                />
+            </div>
+            <div class="form-group">
+                <label for="ngaysinhkh">Ngày sinh</label>
+                <input
+                  bsDatepicker
+                  class="form-control"
+                  placement="top"
+                  formControlName="ngaysinh"
+                />
+            </div>
+            <div class="form-group">
+                <label>Giới tính</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gioitinh" id="gioitinhnam" checked [value]="1"  formControlName="gioitinh">
+                    <label class="form-check-label" for="gioitinhnam">
+                      Nam
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gioitinh" id="gioitinhnu" [value]="0" formControlName="gioitinh">
+                    <label class="form-check-label" for="gioitinhnu">
+                      Nữ
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary"  >Lưu</button>
+            </div>
+
+          </form>
+        </div>
+        <!--End form add KH-->
+      </ng-template>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="order-search" style="margin: 10px 0px; position: relative;">
+            <ng-template #customItemTemplate let-model="item" let-index="index">
+              <h5><img src="{{model.anhsp}}" width="150px">{{model.masp}}-{{model.tensp}}-{{model.giaban | currency: "VND"}}- SL:{{model.soluong}}</h5>
+            </ng-template>
+
+            <input [(ngModel)]="asyncSelected"
+                    [typeaheadAsync]="true"
+                    [typeahead]="dataSource"
+                    (typeaheadLoading)="changeTypeaheadLoading($event)"
+                    (typeaheadOnSelect)="typeaheadOnSelect($event)"
+                    [typeaheadItemTemplate]="customItemTemplate"
+                    [typeaheadOptionsLimit]="7"
+                    [typeaheadScrollable]="true"
+                    typeaheadOptionField="masp"
+                    placeholder="Nhập mã sp hoặc tên sp"
+                    class="form-control">
+              <div *ngIf="typeaheadLoading">Loading</div>
+          </div>
+
+          <div class="product-results">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th class="text-center">STT</th>
+                  <th>Mã sản phẩm</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Ảnh sản phẩm</th>
+                  <th class="text-center">Số lượng</th>
+                  <th class="text-center">Giá bán</th>
+                  <th class="text-center">Giảm giá</th>
+                  <th class="text-center">Thành tiền</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor = "let chitiet of listchitiethoadon; index as i">
+                    <th class="text-center">{{ i }}</th>
+                    <th>{{chitiet.sanpham.masp}}</th>
+                    <th>{{chitiet.sanpham.tensp}}</th>
+                    <th><img src="{{chitiet.sanpham.anhsp}}" width="50px"></th>
+                    <th class="text-center">
+                      <input
+                      type="number"
+                      name="soluongsp"
+                      [(ngModel)]="chitiet.soluong"
+                      class="form-control"
+                      />
+                    </th>
+                    <th class="text-center">{{chitiet.sanpham.giaban | currency: "VND"}}</th>
+                    <th class="text-center">
+                        <input
+                        type="number"
+                        name="giamgiasp"
+                        [(ngModel)]="chitiet.giamgia"
+                        class="form-control"
+                        />
+                    </th>
+                    <th class="text-center">{{chitiet.sanpham.giaban*chitiet.soluong -chitiet.giamgia| currency: "VND"}}</th>
+                    <th style="text-align: center;">
+                      <i class="fa fa-trash-o" style="color: darkred;" title="Xóa" (click)="deleteChitietBill(i)"></i>
+                    </th>
+                  </tr>
+              </tbody>
+            </table>
+            <div class="alert alert-success" role="alert" style="margin-top: 30px;">Gõ mã hoặc tên sản phẩm vào hộp
+              tìm kiếm để thêm hàng vào đơn hàng
+            </div>
+            <!--Show list phieuthu-->
+            <table class="table table-bordered table-striped" *ngIf="hoadonbanhang.phieuthus.length!=0">
+              <thead>
+                <tr>
+                  <th class="text-center">STT</th>
+                  <th>Mã phiếu thu</th>
+                  <th>Ngày thu</th>
+                  <th class="text-center">Số tiền thu</th>
+                  <th class="text-center">Hình thức thu</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor = "let chitiet of hoadonbanhang.phieuthus; index as i">
+                    <th class="text-center">{{ i }}</th>
+                    <th class="text-center">{{ chitiet.maphieuthu }}</th>
+                    <th class="text-center">{{ chitiet.ngaythu | date:'medium'}}</th>
+                    <th class="text-center">{{ chitiet.sotienthu | currency: "VND"}}</th>
+                    <th class="text-center">{{ listMethodBill[chitiet.hinhthucthu] }}</th>
+                  </tr>
+              </tbody>
+            </table>
+            <!--end Show list phieuthu-->
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="morder-info" style="padding: 4px;">
+                <div class="tab-contents" style="padding: 8px 6px;">
+                  <div class="form-group marg-bot-10 clearfix">
+                    <div class="col-md-4" style="padding:0px">
+                      <label>Khách hàng</label>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="col-md-10 padd-0" style="position: relative; padding-left: 0;">
+                        <ng-template #customItemTemplateKhachHang let-model="item" let-index="index">
+                          <h6>{{model.makhachhang}}</h6>
+                          <p><strong>{{model.ten}}</strong></p>
+                          <p>{{model.sdt}}</p>
+                        </ng-template>
+                          <input [(ngModel)]="asyncSelectedKhachHang"
+                          [typeaheadAsync]="true"
+                          [typeahead]="dataSourceKhachHang"
+                          (typeaheadOnSelect)="typeaheadOnSelectKhachHang($event)"
+                          [typeaheadItemTemplate]="customItemTemplateKhachHang"
+                          [typeaheadOptionsLimit]="7"
+                          [typeaheadScrollable]="true"
+                          typeaheadOptionField="makhachhang"
+                          placeholder="Tìm khách hàng"
+                          class="form-control"
+                          style="border-radius: 3px 0 0 3px !important;">
+                          <div *ngIf="typeaheadLoading">Loading</div>
+                          <span class="del-cys"
+                          style="color: red; position: absolute; right: 5px; top:5px; "></span>
+
+                        <div id="cys-suggestion-box"
+                          style="border: 1px solid #444; display: none; overflow-y: auto;background-color: #fff; z-index: 2 !important; position: absolute; left: 0; width: 100%; padding: 5px 0px; max-height: 400px !important;">
+                          <div class="search-cys-inner"></div>
+                        </div>
+                      </div>
+                      <div class="col-md-2 padd-0">
+                        <button class="btn btn-primary"
+                          style="border-radius: 0 3px 3px 0; box-shadow: none; padding: 7px 11px;" type="button"
+                          (click)="openModal(template)">
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group marg-bot-10 clearfix">
+                    <div class="col-md-4" style="padding:0px">
+                      <label>NV bán hàng</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input name="nvbanhang" class="form-control" disabled value="{{hoadonbanhang.nguoitao.ten}}">
+                    </div>
+                  </div>
+                  <div class="form-group marg-bot-10 clearfix">
+                    <div class="col-md-4" style="padding:0px">
+                      <label>Ghi chú</label>
+                    </div>
+                    <div class="col-md-8">
+                      <textarea name="ghichu" class="form-control" [(ngModel)]="ghichu"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <h4 class="lighter" style="margin-top: 0;">
+                <i class="fa fa-info-circle blue"></i>
+                Thông tin thanh toán
+              </h4>
+
+              <div class="morder-info" style="padding: 4px;">
+                <div class="tab-contents" style="padding: 8px 6px;">
+                  <div class="form-group marg-bot-10 clearfix">
+                    <div class="col-md-4">
+                      <label>Hình thức</label>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="input-group">
+                        <input name="method-pay" class="payment-method" type="radio" [value]="1"
+                        [(ngModel)]="methodPay">
+                        Tiền mặt &nbsp;
+                        <input name="method-pay" class="payment-method" type="radio" [value]="2"
+                        [(ngModel)]="methodPay"> Thẻ&nbsp;
+                        <input name="method-pay" class="payment-method" type="radio" [value]="3"
+                        [(ngModel)]="methodPay"> CK&nbsp;
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="form-group marg-bot-10 clearfix">
+                    <div class="col-md-4">
+                      <label>Tiền hàng</label>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="total-money">
+                        {{getTotalProdCost() | currency: "VND"}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group marg-bot-10 clearfix">
+                    <div class="col-md-4">
+                      <label>Giảm giá</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input class="form-control text-right"
+                      style="border-radius: 0 !important;"
+                      type="number"
+                      placeholder="0"
+                      name="giamgiaBill"
+                      [(ngModel)] = "giamgiaBill">
+                    </div>
+                  </div>
+                  <div class="form-group marg-bot-10 clearfix">
+                    <div class="col-md-4">
+                      <label>Tổng cộng</label>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="total-after-discount">
+                        {{getTotalCost() | currency: "VND"}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group marg-bot-10 clearfix">
+                    <div class="col-md-4 padd-right-0">
+                      <label>Khách đưa</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input class="form-control text-right"
+                      style="border-radius: 0 !important;"
+                      type="number"
+                      placeholder="0"
+                      name="khachduaBill"
+                      [(ngModel)] = "khachduaBill">
+                    </div>
+                  </div>
+                  <div class="form-group marg-bot-10 clearfix">
+                    <div class="col-md-4">
+                      <label>Còn nợ</label>
+                    </div>
+                    <div class="col-md-8">
+                      <div>{{getDebt() | currency: "VND"}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="btn-groups pull-right" style="margin-bottom: 50px;">
+                <button
+                *ngIf="hoadonbanhang.trangthai!=3 && hoadonbanhang.trangthai!=5"
+                class="btn btn-primary" (click)="checkoutBill()"><i class="fa fa-save"></i> Lưu
+                </button>
+                <a routerLink="../../orders">
+                  <button class="btn-back btn btn-default" type="button"><i class="fa fa-arrow-left"></i> Thoát
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
