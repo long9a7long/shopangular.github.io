@@ -11,7 +11,7 @@ import { BillsBhService } from '../_services/bills-bh.service';
 })
 export class BillBHResolver implements Resolve<HoaDonBanHang[]> {
     pageNumber = 1;
-    pageSize = 4;
+    pageSize = 10;
     constructor(
         private billbhService: BillsBhService,
         private router: Router

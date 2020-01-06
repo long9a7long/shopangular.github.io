@@ -7,6 +7,34 @@
               <h2>Đơn hàng »</h2>
             </div>
           </div>
+          <div id="print-section" style="display: none;" *ngIf="khachhang"> 
+            <h1 style="text-align: center;">Hóa đơn bán hàng</h1>
+            <h3>Khách hàng: {{khachhang.ten}}</h3>
+            <h3>Ngày bán: {{hoadonbanhang.createdAt | date:'medium'}}</h3>
+            <table border="1px">
+              <thead>
+                <th>Tên SP</th>
+                <th>Số lượng</th>
+                <th>Giá bán</th>
+                <th>Giảm giá</th>
+                <th>Thành tiền</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of listchitiethoadon" >
+                  <td>{{item.sanpham.tensp}}</td>
+                  <td>{{item.soluong}}</td>
+                  <td>{{item.sanpham.giaban | currency: "VND"}}</td>
+                  <td>{{item.giamgia | currency: "VND"}}</td>
+                  <td>{{item.sanpham.giaban*item.soluong-item.giamgia | currency: "VND"}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <h4>Tổng tiền hàng: {{getTotalProdCost() | currency: "VND"}}</h4>
+            <h4>Giảm giá: {{giamgiaBill | currency: "VND"}}</h4>
+            <h4>Khách đưa: {{khachduaBill | currency: "VND"}}</h4>
+            <h4>Còn nợ: {{getDebt() | currency: "VND"}}</h4>
+            <h4>Phương thức thanh toán: {{listMethodBill[hoadonbanhang.loaithanhtoan-1]}}</h4>
+          </div>
           <div class="col-md-6">
             <div class="right-action text-right">
               <div class="btn-groups">
@@ -27,6 +55,7 @@
                 *ngIf="hoadonbanhang.trangthai!=5"
                 class="btn btn-danger" (click)="cancleBill()"><i class="fa fa-ban"></i> Hủy
                 </button>
+                <button class="btn btn-primary" printSectionId="print-section" ngxPrint *ngIf="khachhang">In hóa đơn</button>
                 <button
                 *ngIf="hoadonbanhang.trangthai!=3 && hoadonbanhang.trangthai!=5"
                 class="btn btn-primary" (click)="checkoutBill()"><i class="fa fa-save"></i> Lưu

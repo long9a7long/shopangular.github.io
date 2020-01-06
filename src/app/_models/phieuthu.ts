@@ -1,6 +1,6 @@
 export class PhieuThu {
     id: number;
-    maphieuthu: number;
+    maphieuthu: string;
     idhoadon: number;
     sotienthu: number;
     ngaythu: Date;

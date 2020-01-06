@@ -1,30 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
-
-import { PaginatedResult } from '../_models/pagination';
-import { map } from 'rxjs/operators';
-import { NhaSanXuat } from '../_models/nhasanxuat';
 import { NhaCungCap } from '../_models/nhacungcap';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import { PaginatedResult } from '../_models/pagination';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ManufProdService {
+export class SupsProdService {
 
   constructor( private httpClient: HttpClient) { }
-  getListManu(): Observable<NhaSanXuat[]> {
-    return this.httpClient.get<any>(environment.baseUrl + 'allNSX');
+  getListSup(): Observable<NhaCungCap[]> {
+    return this.httpClient.get<any>(environment.baseUrl + 'allSUPs');
   }
-  getManuProductPage(page?: number, pageSize?: number): Observable<PaginatedResult<NhaSanXuat[]>> {
-    const paginatedResult: PaginatedResult<NhaSanXuat[]> = new PaginatedResult<NhaSanXuat[]>();
+  getSupProductPage(page?: number, pageSize?: number): Observable<PaginatedResult<NhaCungCap[]>> {
+    const paginatedResult: PaginatedResult<NhaCungCap[]> = new PaginatedResult<NhaCungCap[]>();
     let params = new HttpParams();
     if (page != null && pageSize != null) {
       params = params.append('pageNumber', (page - 1).toString());
       params = params.append('pageSize', pageSize.toString());
     }
-    return this.httpClient.get<any>(environment.baseUrl + 'NSXs', { observe: 'response', params })
+    return this.httpClient.get<any>(environment.baseUrl + 'NCCs', { observe: 'response', params })
       .pipe(map(response => {
         paginatedResult.result = response.body.content;
         paginatedResult.pagination = {
@@ -36,23 +34,23 @@ export class ManufProdService {
         return paginatedResult;
       }));
   }
-  addManuProduct(manuProd: NhaSanXuat): Observable<any> {
+  addSupProduct(supProd: NhaCungCap): Observable<any> {
     const headers = new HttpHeaders();
     headers.set('Content-Type', 'application/json; charset=utf-8');
-    return this.httpClient.post(environment.baseUrl + 'NSXs', manuProd, { headers: headers });
+    return this.httpClient.post(environment.baseUrl + 'NCCs', supProd, { headers: headers });
   }
-  updateManuProduct(manuProd: NhaSanXuat) {
+  updateSupsProduct(supProd: NhaCungCap) {
     const headers = new HttpHeaders();
     headers.set('Content-Type', 'application/json; charset=utf-8');
-    return this.httpClient.put(environment.baseUrl + 'NSXs', manuProd, { headers : headers });
+    return this.httpClient.put(environment.baseUrl + 'NCCs', supProd, { headers : headers });
   }
-  deleteManuProduct(id: number) {
-    return this.httpClient.delete(environment.baseUrl + 'NSXs/' + id);
+  deleteSupProduct(id: number) {
+    return this.httpClient.delete(environment.baseUrl + 'NCCs/' + id);
   }
-  getSearchListManuProduct(
+  getSearchListSupProduct(
     page?: number, pageSize?: number, searchTerm?: string):
-    Observable<PaginatedResult<NhaSanXuat[]>> {
-      const paginatedResult: PaginatedResult<NhaSanXuat[]> = new PaginatedResult<NhaSanXuat[]>();
+    Observable<PaginatedResult<NhaCungCap[]>> {
+      const paginatedResult: PaginatedResult<NhaCungCap[]> = new PaginatedResult<NhaCungCap[]>();
       let params = new HttpParams();
       if (page != null && pageSize != null) {
         params = params.append('pageNumber', (page - 1).toString());
@@ -61,7 +59,7 @@ export class ManufProdService {
       if (searchTerm != null) {
         params = params.append('searchTerm', searchTerm);
       }
-      return this.httpClient.get<any>(environment.baseUrl + 'ManuProd/search', { observe: 'response', params })
+      return this.httpClient.get<any>(environment.baseUrl + 'suppliers/search', { observe: 'response', params })
       .pipe(map(response => {
         if (response.body != null) {
           paginatedResult.result = response.body.content;
@@ -75,4 +73,5 @@ export class ManufProdService {
         return paginatedResult;
       }));
   }
+
 }

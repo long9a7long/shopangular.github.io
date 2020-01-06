@@ -23,63 +23,115 @@
       </div>
       <!--Form Add SP-->
       <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="masp">Mã sản phẩm</label>
-            <input type="text" class="form-control" id="masp" placeholder="Mã tự sinh nếu bỏ trống" />
-          </div>
+        <form [formGroup]="addProdForm" (ngSubmit)="createProduct()">
           <div class="form-group">
             <label for="tensp">Tên sản phẩm</label>
-            <input type="text" class="form-control" id="tensp" placeholder="Nhập tên SP (bắt buộc)" />
+            <input type="text" class="form-control" id="tensp" 
+            placeholder="Nhập tên SP (bắt buộc)" formControlName="tensp"/>
+            <div class="col alert alert-danger" role="alert"
+                *ngIf="addProdForm.controls['tensp'].invalid && ((addProdForm.controls['tensp'].touched)
+                  ||(addProdForm.controls['tensp'].dirty))">
+                  Vui lòng nhập tên sản phẩm
+            </div>
           </div>
           <div class="form-group">
-            <label for="sdtkh">Số lượng</label>
-            <input type="number" class="form-control" name="soluong" />
+            <label for="soluong">Số lượng</label>
+            <input type="number" class="form-control"
+             name="soluong" formControlName="soluong"/>
+             <div class="col alert alert-danger" role="alert"
+                *ngIf="addProdForm.controls['soluong'].invalid && ((addProdForm.controls['soluong'].touched)
+                  ||(addProdForm.controls['soluong'].dirty))">
+                  Vui lòng nhập số lượng sản phẩm
+            </div>
           </div>
           <div class="form-group form-inline">
-            <label for="giavon">Giá vốn</label>
-            <input type="number" class="form-control" name="giavon" />
-            <label for="giaban">Giá bán</label>
-            <input type="number" class="form-control" name="giaban" />
+            <label for="giavon">Giá vốn   </label>
+            <input type="number" class="form-control"
+             name="giavon" formControlName="giavon"/>
+             <div class="col alert alert-danger" role="alert"
+                *ngIf="addProdForm.controls['giavon'].invalid && ((addProdForm.controls['giavon'].touched)
+                  ||(addProdForm.controls['giavon'].dirty))">
+                  Vui lòng nhập giá
+            </div>
+            <label for="giaban">Giá bán   </label>
+            <input type="number" 
+            class="form-control" name="giaban" formControlName="giaban"/>
+            <div class="col alert alert-danger" role="alert"
+                *ngIf="addProdForm.controls['giaban'].invalid && ((addProdForm.controls['giaban'].touched)
+                  ||(addProdForm.controls['giaban'].dirty))">
+                  Vui lòng nhập giá bán
+            </div>
           </div>
           <div class="form-group">
             <label for="danhmuc">Danh mục</label>
-            <input type="text" class="form-control" id="danhmuc" />
+            <div class="form-check">
+              <div *ngFor="let item of listCateProd">
+              <input class="form-check-input" type="checkbox" value="{{item.id}}" (change)="onCheckChange($event)"/>
+              <label class="form-check-label">
+                {{item.tendanhmuc}}
+              </label>
+              <div class="col alert alert-danger" role="alert"
+                *ngIf="addProdForm.controls['danhmuc'].invalid && ((addProdForm.controls['danhmuc'].touched)
+                  ||(addProdForm.controls['danhmuc'].dirty))">
+                  Vui lòng nhập chọn danh mục
+            </div>
+            </div>
+            </div>
           </div>
           <div class="form-group">
             <label for="nhasx">Nhà sản xuất</label>
-            <ng-template ngFor let-item [ngForOf]="listProds" let-i="index">
-            <select name="nhasx" class="form-control">
-              <option value="0">{{item.nhasanxuat.tennsx}}</option>
-              <option value="1">Samsung</option>
+            <select name="nhasx" class="form-control" id="nhasx" formControlName="nhasx">
+              <option *ngFor="let item of listManufProd" value="{{item.id}}">{{item.tennsx}}</option>  
             </select>
-          </ng-template>
+            <div class="col alert alert-danger" role="alert"
+                *ngIf="addProdForm.controls['nhasx'].invalid && ((addProdForm.controls['nhasx'].touched)
+                  ||(addProdForm.controls['nhasx'].dirty))">
+                  Vui lòng nhập chọn nhà sản xuất
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="donvitinh">Đơn vị tính</label>
+            <select name="donvitinh" class="form-control" id="donvitinh" formControlName="donvitinh">
+              <option value="cái" >Cái</option>  
+            </select>
+            <div class="col alert alert-danger" role="alert"
+                *ngIf="addProdForm.controls['donvitinh'].invalid && ((addProdForm.controls['donvitinh'].touched)
+                  ||(addProdForm.controls['donvitinh'].dirty))">
+                  Vui lòng nhập chọn đơn vị tính
+            </div>
           </div>
           <div class="form-group">
             <label for="motasp">Mô tả sản phẩm</label>
-            <textarea type="text" class="form-control" id="motasp">
+            <textarea type="text" class="form-control" id="motasp" formControlName="motasp">
                     </textarea>
           </div>
           <div class="form-group">
             <label for="anhsp">Ảnh sản phẩm</label>
-            <input type="text" class="form-control" id="anhsp" />
+            <label>
+              <input type="file" (change)="selectFile($event)" formControlName="anhsp">
+            </label>
+            <div class="col alert alert-danger" role="alert"
+                *ngIf="addProdForm.controls['anhsp'].invalid && ((addProdForm.controls['anhsp'].touched)
+                  ||(addProdForm.controls['anhsp'].dirty))">
+                  Vui lòng nhập số lượng sản phẩm
+            </div>
           </div>
           <div class="form-group">
             <label>Gắn nhãn</label>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="ishot" value="1">
+              <input class="form-check-input" type="checkbox" name="ishot" value="1" formControlName="hot">
               <label class="form-check-label" for="ishot">
                 is Hot
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="isnew" value="1">
+              <input class="form-check-input" type="checkbox" name="isnew" value="1" formControlName="new">
               <label class="form-check-label" for="isnew">
                 is New
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="displaywebsite" value="1">
+              <input class="form-check-input" type="checkbox" name="displaywebsite" value="1" formControlName="display">
               <label class="form-check-label" for="displaywebsite">
                 Hiển thị trên website
               </label>
@@ -102,31 +154,23 @@
           <div class="col-md-3 padd-0" style="margin-right: 10px;">
             <select class="form-control" [(ngModel)]="filterStatus" (change)="filter()"
             name="filterStatus">
-              <option value="0">Trạng thái</option>
+              <option value="0" selected="selected">Trạng thái</option>
               <option value="1">Đang kinh doanh</option>
               <option value="2">Đã ngừng kinh doanh</option>
             </select>
           </div>
           <div class="col-md-3 padd-0" style="margin-right: 10px;">
-          <select class="form-control" [(ngModel)]="fitlerdanhmucsp" name="fitlerdanhmucsp">
-              <option selected="selected" value="-1">--Danh mục--</option>
-              <option ></option>
+          <select class="form-control" [(ngModel)]="fitlerdanhmucsp" (change)="filter()"
+          name="fitlerdanhmucsp">
+              <option selected="selected" value="0">--Danh mục--</option>
+              <option *ngFor="let item of listCateProd" value="{{item.id}}">{{item.tendanhmuc}}</option>
             </select>
           </div>
           <div class="col-md-3 padd-0" style="margin-right: 10px;">
-            <select class="form-control search-option-3" id="prd_manufacture_id">
-              <option selected="selected" value="-1">--Nhà sản xuất--</option>
-              <optgroup label="Chọn nhà sản xuất">
-                <option value="8">test</option>
-                <option value="9">apple</option>
-                <option value="10">cenlia</option>
-                <option value="11">Tommy</option>
-              </optgroup>
-              <optgroup label="------------------------">
-                <option value="product_manufacture" data-toggle="modal" data-target="#list-prd-manufacture">Tạo mới
-                  Nhà sản xuất
-                </option>
-              </optgroup>
+            <select class="form-control search-option-3" [(ngModel)]="fitlernhasx" (change)="filter()"
+            name="fitlernhasx">
+              <option selected="selected" value="0">--Nhà sản xuất--</option>
+              <option *ngFor="let item of listManufProd" value="{{item.id}}">{{item.tennsx}}</option>
             </select>
           </div>
           <button class="btn btn-primary btn-large btn-ssup" (click)="search()"><i class="fa fa-search"></i> Tìm kiếm
@@ -150,16 +194,17 @@
               <ng-template ngFor let-item [ngForOf]="listProds" let-i="index">
                 <tr>
                   <td scope="row">{{item.tensp}}</td>
-                  <th scope="row" (click) = "toggleChiTietSanPham(i)"
-                  >{{item.masp}}</th>
+                  <th scope="row">{{item.masp}}</th>
                   <td scope="row">{{item.soluong}}</td>
                   <td scope="row">{{item.giaban | currency: "VND"}}</td>
                   <td scope="row"><span *ngFor="let danhmuc of item.chitietdanhmuc; let i=index">{{danhmuc.danhmucsp.tendanhmuc}}<span *ngIf="i!=item.chitietdanhmuc.length-1">, </span>  </span></td>
                   <td scope="row">{{item.nhasanxuat.tennsx}}</td>
                   <td style="text-align: center;">
                       <i title="Sửa" class="fa fa-pencil-square-o" style="margin-right: 5px;"
-                        (click)="editProduct(item.id)"></i>
+                      (click)="editProduct(item.masp)"></i>
                       <i class="fa fa-trash-o" style="color: darkred;" title="Xóa" (click)="deleteProduct(item.id)"></i>
+                      <i title ="{{titleState(item.id)}}" class="fa fa-pause" style="margin-left: 5px;"
+                      (click)="changestate(item.id)"></i>
                   </td>
                 </tr>
               </ng-template>
@@ -170,7 +215,7 @@
         <div class="d-flex justify-content-between p-2"></div>
         <div class="alert alert-info summany-info clearfix" role="alert">
           <div class="sm-info pull-left">
-            SL sản phẩm/SL nhà sản xuất: 3/2
+            SL sản phẩm/SL nhà sản xuất: <span>{{getTotalProducts()}}</span> / <span>{{getTotalManuf()}}</span>
           </div>
           <div class="pull-right">
             <pagination previousText="&lsaquo;" name="currentPage" nextText="&rsaquo;" firstText="&laquo;"

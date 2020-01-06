@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import {NgxPrintModule} from 'ngx-print';
 
 import { AdminComponent } from './admin.component';
 import { HeaderComponent } from './layout/header/header.component';
@@ -20,6 +21,7 @@ import { DebtComponent } from './customers/customer-detail/debt/debt.component';
 import { OrdersComponent } from './orders/orders.component';
 import { SellProdComponent } from './orders/sell-prod/sell-prod.component';
 import { ProductsComponent } from './products/products.component';
+import { ProductDetailComponent } from './products/product-detail/product-detail.component';
 import { CategoriesProdComponent } from './products/categories-prod/categories-prod.component';
 import { ManufProdComponent } from './products/manuf-prod/manuf-prod.component';
 import { SuppliersProdComponent } from './products/suppliers-prod/suppliers-prod.component';
@@ -34,7 +36,8 @@ import { ChooseProdComponent } from './orders/sell-prod/choose-prod/choose-prod.
     ReactiveFormsModule,
     BsDatepickerModule.forRoot(),
     PaginationModule.forRoot(),
-    TypeaheadModule.forRoot()
+    TypeaheadModule.forRoot(),
+    NgxPrintModule
   ],
   declarations: [
     AdminComponent,
@@ -51,6 +54,7 @@ import { ChooseProdComponent } from './orders/sell-prod/choose-prod/choose-prod.
     OrdersComponent,
     SellProdComponent,
     ProductsComponent,
+    ProductDetailComponent,
     CategoriesProdComponent,
     ManufProdComponent,
     SuppliersProdComponent,

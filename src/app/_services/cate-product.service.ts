@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -12,6 +12,15 @@ import { DanhMucSP } from '../_models/danhmucsp';
 })
 export class CateProductService {
 constructor( private httpClient: HttpClient ) { }
+
+  getListCate(): Observable<DanhMucSP[]> {
+    return this.httpClient.get<any>(environment.baseUrl + 'allcates');
+  }
+  getListCateArr(): Observable<DanhMucSP[]> {
+    return this.httpClient.get<any>(environment.baseUrl + 'allcates', { observe: 'response' }).pipe(map(response => {
+      return response.body;
+    }));
+  }
   getCateProductPage(page?: number, pageSize?: number): Observable<PaginatedResult<DanhMucSP[]>> {
     const paginatedResult: PaginatedResult<DanhMucSP[]> = new PaginatedResult<DanhMucSP[]>();
     let params = new HttpParams();
@@ -30,6 +39,16 @@ constructor( private httpClient: HttpClient ) { }
         };
         return paginatedResult;
       }));
+  }
+  addCateProduct(cateProd: DanhMucSP): Observable<any> {
+    const headers = new HttpHeaders();
+    headers.set('Content-Type', 'application/json; charset=utf-8');
+    return this.httpClient.post(environment.baseUrl + 'cates', cateProd, { headers: headers });
+  }
+  updateCateProduct(cateProd: DanhMucSP) {
+    const headers = new HttpHeaders();
+    headers.set('Content-Type', 'application/json; charset=utf-8');
+    return this.httpClient.put(environment.baseUrl + 'cates', cateProd, { headers : headers });
   }
   deleteCateProduct(id: number) {
     return this.httpClient.delete(environment.baseUrl + 'cates/' + id);

@@ -21,7 +21,12 @@ import { ProductResolver } from '../_resolver/products-resolver';
 import { CateProductResolver } from '../_resolver/cate-resolver';
 import { CustomersComponent } from './customers/customers.component';
 import { AllCustomersResolver } from '../_resolver/customer-all-resolver';
+import { AllCateProductResolver } from '../_resolver/list-all-cate-resolver';
 import { CustomersDetailResolver } from '../_resolver/customer-detail-resolver';
+import { ProductDetailComponent } from './products/product-detail/product-detail.component';
+import { ProductsDetailResolver } from '../_resolver/product-detail-resolver';
+import { ManuProductResolver } from '../_resolver/manuf-prod.resolver';
+import { SupplierProductResolver } from '../_resolver/supplier-prod-resolver';
 
 
 const routes: Routes = [
@@ -61,7 +66,12 @@ const routes: Routes = [
       {
         path: 'products',
         component: ProductsComponent,
-        resolve: {product: ProductResolver}
+        resolve: {product: ProductResolver, cates: AllCateProductResolver}
+      },
+      {
+        path: 'products/:masp',
+        component: ProductDetailComponent,
+        resolve: {productdetail: ProductsDetailResolver}
       },
       {
         path: 'categories-prod',
@@ -70,11 +80,13 @@ const routes: Routes = [
       },
       {
         path: 'manuf-prod',
-        component: ManufProdComponent
+        component: ManufProdComponent,
+        resolve: {manuProd: ManuProductResolver}
       },
       {
         path: 'suppliers-prod',
-        component: SuppliersProdComponent
+        component: SuppliersProdComponent,
+        resolve: {supProd: SupplierProductResolver}
       },
       {
         path: 'profile',

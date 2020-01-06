@@ -33,7 +33,7 @@ export class OrdersComponent implements OnInit {
     'Tạm dừng',
     'Đã hủy'
   ];
-  itemsPerPage = 4;
+  itemsPerPage = 10;
   listSubTrTableBill = [];
 
   constructor(

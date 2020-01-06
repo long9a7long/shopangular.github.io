@@ -4,7 +4,7 @@
       <h1>
         Danh sách nhà sản xuất
         <span class="pull-right">
-          <a class="btn btn-block btn-primary" >
+          <a class="btn btn-block btn-primary" (click)="openModal(templateAddManuProd)">
             <i class="fa fa-edit"></i> Thêm mới
           </a>
         </span>
@@ -12,6 +12,67 @@
     </section>
     <!-- Main content -->
     <section class="content">
-
+      <ng-template #templateAddManuProd>
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">
+            <strong>Tạo mới nhà sản xuất</strong>
+          </h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRefAddManuProd.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--Form Add SP-->
+        <div class="modal-body">
+          <form [formGroup]="addManuProdForm" (ngSubmit)="createManu()">
+            <div class="form-group">
+              <label for="tensp">Tên nhà sản xuất</label>
+              <input type="text" 
+              class="form-control" 
+              id="tennsx" 
+              placeholder="Nhập tên nhà sản xuất (bắt buộc)"
+              formControlName="tennsx" />
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+          </form>
+        </div>
+        <!--End form add KH-->
+      </ng-template>
+      <div class="box">
+        <div class="box-body">
+          <table class="table table-striped">
+            <thead>
+              <tr >
+                <th scope="col-md-4" class="col-md-1">Tên nhà sản xuất</th>
+                <th scope="col-md-2" style="text-align: left;" class="col-md-1">Công cụ</th>
+              </tr >
+            </thead>
+            <tbody>
+                <ng-template ngFor let-item [ngForOf]="listManuProds" let-i="index">
+                  <tr>
+                    <td scope="row col-md-8" class="col-md-1"><input  type="text" [(ngModel)]="item.tennsx" (keyup.enter)="editManuProduct(item.id)" class="col-md-8"></td>
+                    <td style="text-align: center;">
+                        <i class="fa fa-trash-o col-md-1" style="color: darkred;" title="Xóa" (click)="deleteManuProduct(item.id)"></i>
+                    </td>
+                  </tr>
+                </ng-template>
+            </tbody>
+          </table>
+        </div>
+        <div class="box-footer">
+          <div class="d-flex justify-content-between p-2"></div>
+          <div class="alert alert-info summany-info clearfix" role="alert">
+             SL sản phẩm / SL nhà sản xuất: <span>{{getTotalProducts()}}</span> / <span>{{getTotalManuf()}}</span>
+            <div class="pull-right">
+              <pagination previousText="&lsaquo;" name="currentPage" nextText="&rsaquo;" firstText="&laquo;"
+                lastText="&raquo;" [boundaryLinks]="true" [totalItems]="pagination.totalItems"
+                [itemsPerPage]="pagination.itemsPerPage" [(ngModel)]="pagination.currentPage"
+                (pageChanged)="pageChanged($event)">
+              </pagination>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </div>

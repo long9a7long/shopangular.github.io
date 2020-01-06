@@ -8,15 +8,13 @@ import { catchError } from 'rxjs/operators';
 @Injectable({
     providedIn: 'root'
 })
-export class CateProductResolver implements Resolve<DanhMucSP[]>{
-    pageNumber = 1;
-    pageSize = 4;
+export class AllCateProductResolver implements Resolve<DanhMucSP[]> {
     constructor(
         private cateProdrService: CateProductService,
         private router: Router
     ) { }
     resolve(route: ActivatedRouteSnapshot): Observable<DanhMucSP[]> {
-        return this.cateProdrService.getCateProductPage(this.pageNumber, this.pageSize).pipe(
+        return this.cateProdrService.getListCate().pipe(
             catchError(error => {
                 console.log(error);
                 this.router.navigate(['/admin/categories-prod']);

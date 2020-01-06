@@ -51,6 +51,11 @@ export class SellProdComponent implements OnInit {
     ngaysinh: new FormControl(''),
     gioitinh: new FormControl(''),
   });
+  listMethodBill = [
+    'Tiền mặt',
+    'Thẻ',
+    'Chuyển khoản'
+  ];
   constructor(
     private modalService: BsModalService,
     private productService: ProductService,
@@ -59,7 +64,7 @@ export class SellProdComponent implements OnInit {
     private detailBillService: BillDetailBhService,
     private customersService: CustomersService,
     private router: Router
-    ) {}
+  ) { }
 
   openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
@@ -73,26 +78,28 @@ export class SellProdComponent implements OnInit {
     this.ghichu = '';
     this.currentUser = JSON.parse(localStorage.getItem('user'));
     this.activatedRoute.data.subscribe(data => {
-      this.statesComplex = data.prods;
+      this.statesComplex = data.prods.filter(x => x.trangthai == 1);
       this.statesComplexKhachHang = data.custs;
     });
     this.dataSource = Observable.create((observer: any) => {
       // Runs on every search
       observer.next(this.asyncSelected);
     })
-    .pipe(
+      .pipe(
         mergeMap((token: string) => this.getStatesAsObservable(token))
-    );
+      );
     this.dataSourceKhachHang = Observable.create((observer: any) => {
       // Runs on every search
       observer.next(this.asyncSelectedKhachHang);
     })
-    .pipe(
+      .pipe(
         mergeMap((token: string) => this.getStatesAsObservableKhachHang(token))
-    );
+      );
 
   }
-
+  getCurrentDate() {
+    return new Date();
+  }
   // Function for get Product
   loadProducts() {
     this.productService.getListProduct().subscribe(data => {
@@ -141,18 +148,18 @@ export class SellProdComponent implements OnInit {
   }
 
   typeaheadOnSelectKhachHang(e: TypeaheadMatch): void {
-    this.khachhang = this.findCustByMaKH( e.value);
+    this.khachhang = this.findCustByMaKH(e.value);
   }
 
   findProdByMaSP(masp: string): SanPham {
     return this.statesComplex.filter(x => {
-      return this.listchitiethoadon.find( y => y.sanpham.masp === masp ) == null;
+      return this.listchitiethoadon.find(y => y.sanpham.masp === masp) == null;
     })
-    .find( x => x.masp === masp );
+      .find(x => x.masp === masp);
   }
 
   findCustByMaKH(makh: string): KhachHang {
-    return this.statesComplexKhachHang.find( x => x.makhachhang === makh );
+    return this.statesComplexKhachHang.find(x => x.makhachhang === makh);
   }
 
   getTotalProdCost() {
@@ -176,49 +183,12 @@ export class SellProdComponent implements OnInit {
       alert('Số tiền còn nợ không được âm!');
     } else {
       this.customersService.getDebtCustomer(this.khachhang.makhachhang).subscribe(data => {
-        if (data.tongno > 1000000 ) {
+        if (data.tongno > 1000000) {
           if (confirm('Khách hàng này có tổng dư nợ trên 1 triệu đồng, bạn thực sự muốn thanh toán?')) {
-            this.hoadonbanhang = new HoaDonBanHang();
-            this.hoadonbanhang.createdAt = new Date();
-            this.hoadonbanhang.ghichu = this.ghichu;
-            this.hoadonbanhang.giamgia = this.giamgiaBill;
-            this.hoadonbanhang.khachhang = this.khachhang;
-            this.hoadonbanhang.khachhangtra = this.khachduaBill;
-            this.hoadonbanhang.loaithanhtoan = this.methodPay;
-            this.hoadonbanhang.nguoitao = this.currentUser;
-            this.hoadonbanhang.mahoadon = '';
-            this.hoadonbanhang.trangthai = 1;
-            this.hoadonbanhang.tonggia = this.getTotalCost();
-            let currentBillID = 0;
-            if (!this.checkInputKhachhang()) {
-              alert('Vui lòng chọn khách hàng');
-            } else {
-              this.billService.postBill(this.hoadonbanhang).subscribe(data => {
-                currentBillID = data.id;
-                this.listchitiethoadon.forEach(x => x.id_hoadon = currentBillID);
-                this.detailBillService.postDetailsBill(this.listchitiethoadon).subscribe(() => {
-                  alert('Lưu thành công');
-                  this.router.navigate(['/admin/orders']);
-                },
-                  error => {
-                    if (error.status === 400) {
-                      this.billService.deleteBill(currentBillID).subscribe(() => {
-                        alert('Số lượng sản phẩm trong Kho không đủ!');
-                      }, error => {
-                          console.log(error);
-                        }
-                      );
-                    } else {
-                      alert('Không thể Lưu hóa đơn lúc này!');
-                      console.log(error);
-                    }
-                  }
-                );
-
-              },
-              error => console.log(error));
-            }
+            this.createBill(1);
           }
+        } else {
+          this.createBill(1);
         }
       });
     }
@@ -265,7 +235,7 @@ export class SellProdComponent implements OnInit {
             );
           }
         },
-        error => console.log(error));
+          error => console.log(error));
       }
     }
   }
@@ -275,11 +245,11 @@ export class SellProdComponent implements OnInit {
   }
 
   checkInputKhachhang() {
-    if (this.khachhang === undefined ) {return false; }
+    if (this.khachhang === undefined) { return false; }
     return true;
   }
 
-  emitSubmitChooseProd( event: string ) {
+  emitSubmitChooseProd(event: string) {
     this.chitiethoadon = new ChiTietHoaDonBH();
     const prod = this.findProdByMaSP(event);
     if (prod !== undefined) {
@@ -294,38 +264,38 @@ export class SellProdComponent implements OnInit {
 
   showPopupChooseProd(event, template: TemplateRef<any>) {
     if (event.code === 'F2') {
-      this.modalRefChooseProd =  this.modalService.show(template, Object.assign({}, { class: 'gray modal-lg' }));
+      this.modalRefChooseProd = this.modalService.show(template, Object.assign({}, { class: 'gray modal-lg' }));
     }
   }
 
 
   addCustomer() {
-    this.customerAdd =  new KhachHang();
+    this.customerAdd = new KhachHang();
     this.customerAdd.ten = this.addCustomersForm.controls['ten'].value;
     this.customerAdd.sdt = this.addCustomersForm.controls['sdt'].value;
     this.customerAdd.email = this.addCustomersForm.controls['email'].value;
     this.customerAdd.diachi = this.addCustomersForm.controls['diachi'].value;
     this.customerAdd.ngaysinh = this.addCustomersForm.controls['ngaysinh'].value;
     this.customerAdd.gioitinh = this.addCustomersForm.controls['gioitinh'].value;
-    this.customersService.addCustomer(this.customerAdd).subscribe( next => {
+    this.customersService.addCustomer(this.customerAdd).subscribe(next => {
       alert('Thêm thành công !');
       this.asyncSelectedKhachHang = next.makhachhang;
       this.khachhang = next;
       this.getListCustomers();
       this.modalRef.hide();
     }, error => {
-        alert('Thêm thất bại');
-        console.log(error);
-      }, () => {});
+      alert('Thêm thất bại');
+      console.log(error);
+    }, () => { });
   }
 
   getListCustomers() {
     this.customersService.getAllKHNonPag().subscribe(
-        (data: KhachHang[]) => {
-          this.statesComplexKhachHang = data;
+      (data: KhachHang[]) => {
+        this.statesComplexKhachHang = data;
       },
       error => console.log(error)
-      );
+    );
   }
 
   completeBill() {
@@ -339,32 +309,58 @@ export class SellProdComponent implements OnInit {
     } else if (this.getDebt() < 0) {
       alert('Số tiền còn nợ không được âm!');
     } else {
-      this.hoadonbanhang.updatedAt = new Date();
-      this.hoadonbanhang.giamgia = this.giamgiaBill;
-      this.hoadonbanhang.khachhang = this.khachhang;
-      this.hoadonbanhang.khachhangtra = this.khachduaBill;
-      this.hoadonbanhang.loaithanhtoan = this.methodPay;
-      this.hoadonbanhang.tonggia = this.getTotalCost();
-      this.hoadonbanhang.trangthai = status;
-      this.hoadonbanhang.ghichu = this.ghichu;
-      this.hoadonbanhang.nguoisua = this.currentUser;
-      this.hoadonbanhang.chitiethoadons = this.listchitiethoadon;
-      if (!this.checkInputKhachhang()) {
-        alert('Vui lòng chọn khách hàng');
-      } else {
-        this.billService.putBill(this.hoadonbanhang).subscribe(() => {
+      this.customersService.getDebtCustomer(this.khachhang.makhachhang).subscribe(data => {
+        if (data.tongno > 1000000) {
+          if (confirm('Khách hàng này có tổng dư nợ trên 1 triệu đồng, bạn thực sự muốn thanh toán?')) {
+            this.createBill(status);
+          }
+        } else {
+          this.createBill(status);
+        }
+      });
+    }
+  }
+
+  createBill(status: number) {
+    this.hoadonbanhang = new HoaDonBanHang();
+    this.hoadonbanhang.createdAt = new Date();
+    this.hoadonbanhang.ghichu = this.ghichu;
+    this.hoadonbanhang.giamgia = this.giamgiaBill;
+    this.hoadonbanhang.khachhang = this.khachhang;
+    this.hoadonbanhang.khachhangtra = this.khachduaBill;
+    this.hoadonbanhang.loaithanhtoan = this.methodPay;
+    this.hoadonbanhang.nguoitao = this.currentUser;
+    this.hoadonbanhang.mahoadon = '';
+    this.hoadonbanhang.trangthai = status;
+    this.hoadonbanhang.tonggia = this.getTotalCost();
+    let currentBillID = 0;
+    if (!this.checkInputKhachhang()) {
+      alert('Vui lòng chọn khách hàng');
+    } else {
+      this.billService.postBill(this.hoadonbanhang).subscribe(data => {
+        currentBillID = data.id;
+        this.listchitiethoadon.forEach(x => x.id_hoadon = currentBillID);
+        this.detailBillService.postDetailsBill(this.listchitiethoadon).subscribe(() => {
           alert('Lưu thành công');
           this.router.navigate(['/admin/orders']);
         },
-        error => {
-          if (error.status === 400) {
-            alert('Số lượng sản phẩm trong Kho không đủ!');
-          } else {
-            alert('Không thể Lưu hóa đơn lúc này!');
-            console.log(error);
+          error => {
+            if (error.status === 400) {
+              this.billService.deleteBill(currentBillID).subscribe(() => {
+                alert('Số lượng sản phẩm trong Kho không đủ!');
+              }, error => {
+                console.log(error);
+              }
+              );
+            } else {
+              alert('Không thể Lưu hóa đơn lúc này!');
+              console.log(error);
+            }
           }
-        });
-      }
+        );
+
+      },
+        error => console.log(error));
     }
   }
 }

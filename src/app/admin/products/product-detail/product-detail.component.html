@@ -1,0 +1,104 @@
+<div class="content-wrapper">
+  <!-- Main content -->
+  <section class="content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">
+          <strong>Sửa thông tin sản phẩm</strong>
+        </h4>
+      </div>
+      <div class="box">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9 align-center">
+              <form [formGroup]="editProdForm" (ngSubmit)="updateProduct()">
+                <div class="form-group">
+                  <label for="masp">Mã sản phẩm</label>
+                  <input type="text" class="form-control" id="masp" formControlName="masp" 
+                  value="{{proddetail.masp}}" >
+                </div>
+                <div class="form-group">
+                  <label for="tensp">Tên sản phẩm</label>
+                  <input type="text" class="form-control" id="tensp" 
+                  formControlName="tensp"
+                  value="{{proddetail.tensp}}"/>
+                </div>
+                <div class="form-group">
+                  <label for="soluong">Số lượng</label>
+                  <input type="number" class="form-control"
+                   name="soluong" formControlName="soluong"
+                   value="{{proddetail.soluong}}"/>
+                </div>
+                <div class="form-group form-inline">
+                  <label for="giavon">Giá vốn   </label>
+                  <input type="number" class="form-control"
+                   name="giavon" formControlName="giavon"
+                   value="{{proddetail.giagoc}}"/>
+                  <label for="giaban">Giá bán   </label>
+                  <input type="number" 
+                  class="form-control" name="giaban" formControlName="giaban"
+                  value="{{proddetail.giaban}}"/>
+                </div>
+                <div class="form-group">
+                  <label for="danhmuc">Danh mục</label>
+                  <div class="form-check">
+                    <div *ngFor="let item of listCateProd">
+                    <input class="form-check-input" type="checkbox" value="{{item.id}}" 
+                    (change)="onCheckChange($event)" [checked]="checkCateProd(item.id)" />
+                    <label class="form-check-label">
+                      {{item.tendanhmuc}}
+                    </label>
+                  </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="nhasx">Nhà sản xuất</label>
+                  <select name="nhasx" class="form-control" id="nhasx" formControlName="nhasx">
+                    <option *ngFor="let item of listManufProd" value="{{item.id}}">{{item.tennsx}}</option>  
+                </select>
+                <div class="form-group">
+                  <label for="donvitinh">Đơn vị tính</label>
+                  <input type="text" class="form-control" formControlName="donvitinh" value="{{proddetail.donvitinh}}"/>
+                </div>
+                </div>
+                <div class="form-group">
+                  <label for="motasp">Mô tả sản phẩm</label>
+                  <textarea type="text" class="form-control" formControlName="motasp">{{proddetail.motasp}}</textarea>
+                </div>
+                <div class="form-group">
+                  <label for="anhsp">Ảnh sản phẩm</label>
+                    <img src="{{proddetail.anhsp}}" style="width: 200px;">
+                    <br>
+                    <input type="file" (change)="selectFile($event)" formControlName="anhsp">
+                </div>
+                <div class="form-group">
+                  <label>Gắn nhãn</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="ishot" value="1" formControlName="hot">
+                    <label class="form-check-label" for="ishot">
+                      is Hot
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="isnew" value="1" formControlName="new">
+                    <label class="form-check-label" for="isnew">
+                      is New
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="displaywebsite" value="1" formControlName="display">
+                    <label class="form-check-label" for="displaywebsite">
+                      Hiển thị trên website
+                    </label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary" ><a routerLink="../../products"></a>Cập nhật</button>
+                </div>
+      
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+  </section>
+</div>

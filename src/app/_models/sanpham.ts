@@ -1,7 +1,7 @@
 import {DanhMucSP} from './danhmucsp';
 import {NhaSanXuat} from './nhasanxuat'
 import { ChiTietDanhMuc } from './chitietdanhmuc';
-export interface SanPham {
+export class SanPham {
   id: number;
   masp: string;
   tensp: string;
@@ -10,6 +10,7 @@ export interface SanPham {
   soluong: number;
   trangthai: number;
   nhasanxuat: NhaSanXuat;
+  nhasx: NhaSanXuat;
   chitietdanhmuc: ChiTietDanhMuc[];
   anhsp: string;
   motasp: string;
@@ -17,6 +18,6 @@ export interface SanPham {
   ishot: boolean;
   isnew: boolean;
   displaywebsite: boolean;
-  created_at: Date;
-  updated_at?: Date;
+  createdAt: Date;
+  updatedAt?: Date;
 }

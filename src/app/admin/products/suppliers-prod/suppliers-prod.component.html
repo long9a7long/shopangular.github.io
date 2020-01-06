@@ -4,7 +4,7 @@
       <h1>
         Danh sách nhà cung cấp
         <span class="pull-right">
-          <a class="btn btn-block btn-primary" >
+          <a class="btn btn-block btn-primary" (click)="openModal(templateAddSupProd)">
             <i class="fa fa-edit"></i> Thêm mới
           </a>
         </span>
@@ -12,6 +12,97 @@
     </section>
     <!-- Main content -->
     <section class="content">
-
+      <ng-template #templateAddSupProd>
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">
+            <strong>Tạo mới nhà sản xuất</strong>
+          </h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRefAddSupProd.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!--Form Add SP-->
+        <div class="modal-body">
+          <form [formGroup]="addSupProdForm" (ngSubmit)="createSup()">
+            <div class="form-group">
+              <label for="tensp">Tên nhà cung cấp</label>
+              <input type="text" 
+              class="form-control" 
+              id="tenncc" 
+              placeholder="Nhập tên nhà cung cấp (bắt buộc)"
+              formControlName="tenncc" />
+            </div>
+            <div class="form-group">
+              <label for="sdtkh">Số điện thoại</label>
+              <input type="text"
+              class="form-control" 
+              id="sdt"
+              placeholder="Vui lòng nhập số điện thoại"
+              formControlName="sdt"/>
+            </div>
+            <div class="form-group">
+              <label for="sdtkh">Email</label>
+              <input type="email"
+              class="form-control" 
+              id="email"
+              placeholder="Nhập email"
+              formControlName="email"/>
+            </div>
+            <div class="form-group">
+              <label for="sdtkh">Địa chỉ</label>
+              <input type="text"
+              class="form-control" 
+              id="diachi"
+              placeholder="Nhập địa chỉ"
+              formControlName="diachi"/>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Lưu</button>
+            </div>
+          </form>
+        </div>
+        <!--End form add KH-->
+      </ng-template>
+      <div class="box">
+        <div class="box-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col-md-4">Tên nhà sản xuất</th>
+                <th scope="col-md-6">Số điện thoại</th>
+                <th scope="col-md-6">Email</th>
+                <th scope="col-md-6">Địa chỉ</th>
+                <th scope="col-md-2" style="text-align: center;">Công cụ</th>
+              </tr>
+            </thead>
+            <tbody>
+                <ng-template ngFor let-item [ngForOf]="listSupProds" let-i="index">
+                  <tr (keyup.enter)="editSupsProduct(item.id)">
+                    <td scope="row col-md-8" class="col-md-4"><input  type="text" [(ngModel)]="item.tenncc" class="col-md-12"></td>
+                    <th scope="row col-md-4"class="col-md-2"><input  type="text" [(ngModel)]="item.sdt" class="col-md-10"></th>
+                    <th scope="row col-md-6" class="col-md-3"><input  type="text" [(ngModel)]="item.email" class="col-md-10"></th>
+                    <th scope="row col-md-6" class="col-md-2"><input  type="text" [(ngModel)]="item.diachi" class="col-md-10"></th>
+                    <td style="text-align: center;" class="col-md-1">
+                        <i class="fa fa-trash-o col-md-12" style="color: darkred;" title="Xóa" (click)="deleteSupProduct(item.id)"></i>
+                    </td>
+                  </tr>
+                </ng-template>
+            </tbody>
+          </table>
+        </div>
+        <div class="box-footer">
+          <div class="d-flex justify-content-between p-2"></div>
+          <div class="alert alert-info summany-info clearfix" role="alert">
+             SL sản phẩm / SL nhà cung cấp: <span>{{getTotalProducts()}}</span> / <span>{{getTotalSups()}}</span>
+            <div class="pull-right">
+              <pagination previousText="&lsaquo;" name="currentPage" nextText="&rsaquo;" firstText="&laquo;"
+                lastText="&raquo;" [boundaryLinks]="true" [totalItems]="pagination.totalItems"
+                [itemsPerPage]="pagination.itemsPerPage" [(ngModel)]="pagination.currentPage"
+                (pageChanged)="pageChanged($event)">
+              </pagination>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </div>

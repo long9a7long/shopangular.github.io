@@ -28,6 +28,14 @@ export class PurchaseHistoryComponent implements OnInit {
     'Thẻ',
     'Chuyển khoản'
   ];
+  listStatusBill = [
+    'Khởi tạo',
+    'Đang xử lý',
+    'Đang giao',
+    'Hoàn thành',
+    'Tạm dừng',
+    'Đã hủy'
+  ];
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -52,6 +60,12 @@ export class PurchaseHistoryComponent implements OnInit {
 
   toggleToDebt(value: boolean) {
     this.change.emit(value);
+  }
+
+  show() {
+    if (this.listCusBill != null || this.listCusBill !== undefined) {
+       return true;
+    } else { return false; }
   }
 
   getCustomerBills(makhachhang: string) {
@@ -82,7 +96,6 @@ export class PurchaseHistoryComponent implements OnInit {
         this.baseDataListBills.push(x);
       });
     }
-    console.log(data);
   }
 
   editCustomer(mahoadon: string) {

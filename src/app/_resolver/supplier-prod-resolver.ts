@@ -1,25 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { DanhMucSP } from '../_models/danhmucsp';
 import { Observable, of } from 'rxjs';
-import { CateProductService } from '../_services/cate-product.service';
 import { catchError } from 'rxjs/operators';
+import { NhaCungCap } from '../_models/nhacungcap';
+import { SupsProdService } from '../_services/sups-prod.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class CateProductResolver implements Resolve<DanhMucSP[]>{
+export class SupplierProductResolver implements Resolve<NhaCungCap[]>{
     pageNumber = 1;
     pageSize = 4;
     constructor(
-        private cateProdrService: CateProductService,
+        private supsProdrService: SupsProdService,
         private router: Router
     ) { }
-    resolve(route: ActivatedRouteSnapshot): Observable<DanhMucSP[]> {
-        return this.cateProdrService.getCateProductPage(this.pageNumber, this.pageSize).pipe(
+    resolve(route: ActivatedRouteSnapshot): Observable<NhaCungCap[]> {
+        return this.supsProdrService.getSupProductPage(this.pageNumber, this.pageSize).pipe(
             catchError(error => {
                 console.log(error);
-                this.router.navigate(['/admin/categories-prod']);
+                this.router.navigate(['/admin/suppliers-prod']);
                 return of(null);
             })
         );

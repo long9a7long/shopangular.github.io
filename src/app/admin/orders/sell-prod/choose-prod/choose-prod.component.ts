@@ -31,7 +31,7 @@ export class ChooseProdComponent implements OnInit {
     this.submit.emit(masp);
   }
 
-  filterProd($event) {
+  filterProd() {
     this.prodService.getSearchListProduct(1, 99999, this.searchProdKey).subscribe(data => {
       this.listProd = data.result;
     },

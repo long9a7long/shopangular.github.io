@@ -1,4 +1,4 @@
-export interface DanhMucSP {
+export class DanhMucSP {
   id: number;
   tendanhmuc: string;
   motadanhmuc: string;
